@@ -1,10 +1,12 @@
 import { useState, useCallback, useEffect } from "react";
 
 import { useSocket } from "../context/SocketProvider";
+import { useNavigate } from "react-router-dom";
 export default function Lobby() {
   const socket = useSocket();
   const [email, setEmail] = useState("");
   const [room, setRoom] = useState("");
+  const navigate = useNavigate();
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault(); //  method is used to stop the default action of an element from happening.
@@ -15,9 +17,10 @@ export default function Lobby() {
   const handleRoomJoin = useCallback(
     (data) => {
       const { email, room } = data;
-      console.log( email, room );
+      console.log(email, room);
+      navigate(`/room/${room}`, { state: { email, room } });
     },
-    []
+    [navigate]
   );
   useEffect(() => {
     socket.on("room:join", handleRoomJoin);
